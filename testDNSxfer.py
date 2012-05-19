@@ -1,12 +1,8 @@
 #!/usr/bin/env python
 '''
 
-# Info: testDNSxfer.py - Query a supplied dns zone for it's NS records and 
-                         test if it's offering transfers out to the world.
-                         Basicall, this script automates a couple dig commands:
-                             dig -tns example.org
-                             dig @ns1.example.org axfr
-                             dig @ns2.... etc.
+# Info: Query a supplied dns zone for it's NS records and 
+        test if it's offering transfers out to the world.
 
 # Required: PyDNS, available here: http://pydns.sourceforge.net
             or via easy_install - eg: sh-3.2$ easy_install pydns
