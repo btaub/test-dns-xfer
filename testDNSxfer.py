@@ -1,18 +1,15 @@
 #!/usr/bin/env python
 '''
 
-     Author: beautaub@gmail.com
+# Info: testDNSxfer.py - Query a supplied dns zone for it's NS records and 
+                         test if it's offering transfers out to the world.
+                         Basicall, this script automates a couple dig commands:
+                             dig -tns example.org
+                             dig @ns1.example.org axfr
+                             dig @ns2.... etc.
 
-     Info: testDNSxfer.py - Query a supplied dns zone for it's NS records and 
-                            test if it's offering transfers out to the world.
-                            This script could be replaced by using a couple dig commands.
-                            e.g. dig -tns example.org
-                                 dig @ns1.example.org axfr
-                                 dig @ns2.... etc.
-                            Or even nslookup
-
-     Required: PyDNS, available here: http://pydns.sourceforge.net
-               or via easy_install - eg: sh-3.2$ easy_install pydns
+# Required: PyDNS, available here: http://pydns.sourceforge.net
+            or via easy_install - eg: sh-3.2$ easy_install pydns
 
 # Copyright (C) 2012
 # Author: Beau Taub <beautaub@gmail.com>
