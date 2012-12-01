@@ -27,14 +27,16 @@
 
 '''
 
-import dns.query, dns.zone, dns.resolver, sys, socket
+import dns.query, dns.zone, dns.resolver
+import sys, socket, re
 
 # Get NS records
 def getNameservers(zonename):
     nameservers = dns.resolver.query(zonename, 'NS') 
     return nameservers
 
-# Check for and get required zone argument
+# Check for and get required zone argument. Clean up the domain string if it contains anything other than
+# the domain name
 def getArgs(zonename):
     if  len(sys.argv) != 2:
         print '\n     Usage: \n\n     {0}  fqdn\n'.format(sys.argv[0]) 
@@ -42,10 +44,14 @@ def getArgs(zonename):
               
         sys.exit(1)
     else:
-        return sys.argv[1]
+        zonename=re.sub('http://|https://|www.|/*$','',sys.argv[1])
+        zonename=zonename.split('/')
+        return zonename[0]
 
 zonename = ''
 zonename = getArgs(zonename)
+socket.setdefaulttimeout(20)
+#print "Socket timeout:", socket.getdefaulttimeout()
 
 # Get nameserver records
 try:
@@ -61,6 +67,11 @@ except dns.resolver.NXDOMAIN:
 except dns.resolver.NoAnswer:
     print "\nInvalid zone name: it's not a zone\n"
     sys.exit(1)
+
+except dns.exception.Timeout:
+    print "\nTimeout while attempting to contact DNS server"
+    sys.exit(1)
+
 
 # Attempt to transfer the zone from each nameserver, stop if 1 server gives up the zone 
 for nameserver in getNameservers(zonename):
