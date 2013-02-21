@@ -30,10 +30,26 @@
 import dns.query, dns.zone, dns.resolver
 import sys, socket, re, string
 
+socket.setdefaulttimeout(10)
+
 # Get NS records
 def getNameservers(zonename):
-    nameservers = dns.resolver.query(zonename, 'NS') 
-    return nameservers
+
+    try:
+        nameservers = dns.resolver.query(zonename, 'NS') 
+        return nameservers
+    except dns.zone.NoNS:
+        print "\nDomain:", zonename, "has no ns records, sorry ;("
+        return ''
+    except dns.resolver.NXDOMAIN:
+        print "\nNon-existent domain\n"
+        return ''
+    except dns.exception.Timeout:
+        print "\nTimeout\n"
+        return ''
+    except dns.resolver.NoAnswer: 
+        print "\nproblem getting NS record\n"
+        return ''
 
 # Check for and get required zone argument. Clean up the domain string if it contains anything other than
 # the domain name
@@ -55,12 +71,20 @@ def getZoneXfer(zonename):
             tryxfer = dns.zone.from_xfr(dns.query.xfr(str(nameserver), zonename))
             names = tryxfer.nodes.keys()
             names.sort()
+            f = open('/Users/btaub/dns-research/zones/' + zonename +'.'+ str(nameserver) + 'txt','w')
 
             for n in names:
                  print tryxfer[n].to_text(n)
+                 f.write(tryxfer[n].to_text(n)+'\n')
 
-            sys.exit(0)
+            f.write('\nZone transferred from ' + str(nameserver) + '\n')
+            f.close()
 
+    #       commented exit because I want to get multiple domains
+    #        sys.exit(0)
+
+        except dns.zone.NoNS:
+            print "\nDomain:", zonename, "has no ns records, sorry ;("
         except dns.resolver.NoAnswer: 
             print "\nproblem getting NS record\n"
         except dns.resolver.NXDOMAIN:
@@ -83,12 +107,10 @@ zonename = getArgs(zonename)
 
 # If arg has no tld, let's append a few and see what's out there
 if string.find(zonename,'.') < 0:
- #   print string.find(zonename,'m')
- #   print "no dot found"
-    for tld in ('net','com','org'):
+    for tld in ('net','com','org','us','gov','info','co.uk','co.nz'):
         getZoneXfer(zonename + '.' + tld)
 
-socket.setdefaulttimeout(10)
+#socket.setdefaulttimeout(10)
 #print "Socket timeout:", socket.getdefaulttimeout()
 
 # Get nameserver records
@@ -110,4 +132,3 @@ except dns.resolver.NoAnswer:
 except dns.exception.Timeout:
     print "\nTimeout while attempting to contact DNS server"
     sys.exit(1)
-
