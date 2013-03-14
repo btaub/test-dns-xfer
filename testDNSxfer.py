@@ -42,7 +42,7 @@ def getNameservers(zonename):
         print "\nDomain:", zonename, "has no ns records, sorry ;("
         return ''
     except dns.resolver.NXDOMAIN:
-        print "\nNon-existent domain\n"
+        print "\nNon-existent domain" , zonename , "\n"
         return ''
     except dns.exception.Timeout:
         print "\nTimeout\n"
@@ -53,7 +53,8 @@ def getNameservers(zonename):
 
 # Check for and get required zone argument. Clean up the domain string if it contains anything other than
 # the domain name
-def getArgs(zonename):
+#def getArgs(zonename):
+def getArgs():
     if  len(sys.argv) != 2:
         print '\n     Usage: \n\n     {0}  fqdn\n'.format(sys.argv[0]) 
         print '\n     Purpose: \n\n     Test a domain for wide-open zone transfer\n'
@@ -102,8 +103,9 @@ def getZoneXfer(zonename):
         except dns.resolver.NoAnswer:
             print "\nInvalid Zone name\n"
 
-zonename = ''
-zonename = getArgs(zonename)
+#zonename = ''
+#zonename = getArgs(zonename)
+zonename = getArgs()
 
 # If arg has no tld, let's append a few and see what's out there
 if string.find(zonename,'.') < 0:
@@ -132,3 +134,4 @@ except dns.resolver.NoAnswer:
 except dns.exception.Timeout:
     print "\nTimeout while attempting to contact DNS server"
     sys.exit(1)
+
