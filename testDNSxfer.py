@@ -72,7 +72,9 @@ def getZoneXfer(zonename):
             tryxfer = dns.zone.from_xfr(dns.query.xfr(str(nameserver), zonename))
             names = tryxfer.nodes.keys()
             names.sort()
-            f = open('/Users/btaub/dns-research/zones/' + zonename +'.'+ str(nameserver) + 'txt','w')
+            # if a successful zone xfer is initiated, save it to a file in /tmp
+            # feel free to change the location below
+            f = open('/tmp/' + zonename +'.'+ str(nameserver) + 'txt','w')
 
             for n in names:
                  print tryxfer[n].to_text(n)
