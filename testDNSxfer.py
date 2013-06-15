@@ -123,10 +123,6 @@ except dns.resolver.NXDOMAIN:
     print "Invalid name" , zonename
     sys.exit(1)
 
-except dns.resolver.NoAnswer:
-    print "\nInvalid zone name: it's not a zone\n"
-    sys.exit(1)
-
 except dns.exception.Timeout:
     print "\nTimeout while attempting to contact DNS server"
     sys.exit(1)
