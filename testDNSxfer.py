@@ -88,22 +88,16 @@ def getZoneXfer(zonename):
 
         except dns.zone.NoNS:
             print "\nDomain:", zonename, "has no ns records, sorry ;("
-        except dns.resolver.NoAnswer: 
-            print "\nproblem getting NS record\n"
         except dns.resolver.NXDOMAIN:
             print "\nDomain:", zonename, "unresponsive, try again\n"
         except dns.exception.FormError:
             print "\nXfer refused, good work dns admin\n"
-        except dns.resolver.NoAnswer:
-            print "\nNo Answer\n"
         except EOFError:
             print "\nEOFError\n"
         except KeyboardInterrupt:
             print "\nUser cancelled\n"
         except socket.error:
             print "\nFailed: connection refused\n"
-        except dns.resolver.NoAnswer:
-            print "\nInvalid Zone name\n"
 
 #zonename = ''
 #zonename = getArgs(zonename)
