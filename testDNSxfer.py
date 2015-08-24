@@ -4,8 +4,8 @@
 # Info: Query a supplied dns zone (or just a name without tld/gtld) for it's NS records and 
         test if it's offering transfers out to the world.
 
-# Required: PyDNS, available here: http://pydns.sourceforge.net
-            or via easy_install - eg: sh-3.2$ easy_install pydns
+# Required: dnspython:
+            sh-3.2$ pip install dnspython
 
 # Copyright (C) 2012
 # Author: Beau Taub <beautaub@gmail.com>
