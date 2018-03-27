@@ -32,94 +32,108 @@ import sys, socket, re, string
 
 socket.setdefaulttimeout(10)
 
-# Get NS records
+'''
+  Get NS records
+'''
 def getNameservers(zonename):
-
     try:
         nameservers = dns.resolver.query(zonename, 'NS') 
         return nameservers
-    except dns.resolver.NoNameservers:
-    #except dns.zone.NoNS:
-        print "\nDomain:", zonename, "has no ns records, sorry ;("
-        return ''
-    except dns.resolver.NXDOMAIN:
-        print "\nNon-existent domain" , zonename , "\n"
-        return ''
-    except dns.exception.Timeout:
-        print "\nTimeout\n"
-        return ''
-    except dns.resolver.NoAnswer: 
-        print "\nproblem getting NS record\n"
-        return ''
 
-# Check for and get required zone argument. Clean up the domain string if it contains anything other than
-# the domain name
+        '''
+        Catch exceptions
+        '''
+    except dns.resolver.NoNameservers:
+        print("\nDomain:", zonename, "has no ns records, sorry ;(")
+        return ""
+    except dns.resolver.NXDOMAIN:
+        print("\nNon-existent domain %s\n" % zonename)
+        return ""
+    except dns.exception.Timeout:
+        print("\nTimeout\n")
+        return ""
+    except dns.resolver.NoAnswer: 
+        print("\nproblem getting NS record\n")
+        return ""
+
+'''
+  Check for and get required zone argument. Clean up the domain string if it contains anything other than
+  the domain name
+'''
+
 def getArgs():
     if  len(sys.argv) != 2:
-        #print '\n     Usage: \n\n     {0}  fqdn\n'.format(sys.argv[0]) 
-        print '\n     Usage: \n\n     %s  fqdn\n' % sys.argv[0]
-        print '\n     Purpose: \n\n     Test a domain for wide-open zone transfer\n'
+        print('\n     Usage: \n\n     %s  fqdn\n' % sys.argv[0])
+        print('\n     Purpose: \n\n     Test a domain for open zone transfer\n')
         sys.exit(1)
     else:
         zonename=re.sub('https://|http://|www.','',sys.argv[1])
         zonename=zonename.split('/')
-        print "ZONENAME: %s" %zonename[0]
+        print("ZONENAME: %s" %zonename[0])
         return zonename[0]
 
-# Try to transfer the zone
+'''
+  Try to transfer the zone
+'''
+
 def getZoneXfer(zonename):
     for nameserver in getNameservers(zonename):
         try:
-            print '\nQuerying nameserver %s for DNS zone %s\nResult:\r' % (nameserver,zonename)
+            print('\nQuerying nameserver %s for DNS zone %s\nResult:\r' % (nameserver,zonename))
 
             tryxfer = dns.zone.from_xfr(dns.query.xfr(str(nameserver), zonename))
             names = tryxfer.nodes.keys()
             names.sort()
-            f = open('/tmp/' + zonename +'.'+ str(nameserver) + 'txt','w')
+            f = open('/tmp/%s.%s.txt' %(zonename,str(nameserver)),'w')
 
             for n in names:
-                 print tryxfer[n].to_text(n)
+                 print(tryxfer[n].to_text(n))
                  f.write(tryxfer[n].to_text(n)+'\n')
             f.write('\nZone transferred from: ' + str(nameserver) + '\n')
             f.close()
 
         except dns.zone.NoNS:
-            print "\nDomain: %s exists, but has no ns records, sorry ;( " %zonename
-#        except dns.resolver.NoAnswer: 
-#            print "\nproblem getting NS record\n"
+            print("\nDomain: %s exists, but has no ns records, sorry ;( " %zonename)
         except dns.resolver.NXDOMAIN:
-            print "\nDomain:", zonename, "unresponsive, try again\n"
+            print("\nDomain:", zonename, "unresponsive, try again\n")
         except dns.exception.FormError:
-            print "\nXfer refused, good work dns admin\n"
+            print("\nXfer refused, good work dns admin\n")
         except EOFError:
-            print "\nEOFError\n"
+            print("\nEOFError\n")
         except KeyboardInterrupt:
-            print "\nUser cancelled\n"
+            print("\nUser cancelled\n")
         except KeyError as e: 
-            print "KeyError %s" % e
+            print("KeyError %s" % e)
         except socket.error:
-            print "\nFailed: connection refused\n"
+            print("\nFailed: connection refused\n")
 
 zonename = getArgs()
 
-# If arg has no tld, let's append a few and see what's out there
+'''
+  If arg has no tld, let's append a few
+'''
+
 if string.find(zonename,'.') < 0:
     for tld in ('net','com','org','us','gov','info','co.uk','co.nz','it','pl','co.in','ly'):
-        print "TLD %s" % tld
-        getZoneXfer(zonename + '.' + tld)
+        print("TLD %s" % tld)
+        getZoneXfer("%s.%s"%(zonename,tld))
+        #getZoneXfer(zonename + '.' + tld)
     sys.exit(0)
 
-# Get nameserver records
+'''
+  Get nameserver records
+'''
+
 try:
     ns = getNameservers(zonename)
-    if len(ns):
-        print "Number of NS records: %s" % len(ns)
+    if ns:
+        print("Number of NS records: %s" % len(ns))
         getZoneXfer(zonename)
 
 except dns.resolver.NXDOMAIN:
-    print "Invalid name %s" % zonename
+    print("AAA Invalid name %s" % zonename)
     sys.exit(1)
 
 except dns.exception.Timeout:
-    print "\nTimeout while attempting to contact DNS server"
+    print("\nAAATimeout while attempting to contact DNS server")
     sys.exit(1)
