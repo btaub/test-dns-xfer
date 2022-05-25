@@ -40,8 +40,7 @@ def get_zone_xfer(zonename):
             names = the_xfer.nodes.keys()
             for n in names:
                if args.output:
-                   dt = datetime.now()
-                   ts = dt.strftime("%d%m%Y-%I%M%s")
+                   ts = datetime.now().strftime("%d%m%Y-%I%M%s")
                    with open(args.domain+"-"+str(nameserver)+ts+".txt",'a+') as f:
                         f.write("DOMAIN: %s\n" % args.domain)
                         f.write(the_xfer[n].to_text(n))
