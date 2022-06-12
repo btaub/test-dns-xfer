@@ -31,26 +31,26 @@ def get_nameservers(zonename):
         return
 
 def get_zone_xfer(zonename):
-    try:
-        for nameserver in get_nameservers(zonename):
-            if args.verbose:
-                print("[+] Testing nameserver: %s" % (nameserver))
-            nameserver_ip = dns.resolver.resolve(str(nameserver), rdtype=dns.rdatatype.A)
+    for nameserver in get_nameservers(zonename):
+        if args.verbose:
+            print("[+] Testing nameserver: %s" % (nameserver))
+        nameserver_ip = dns.resolver.resolve(str(nameserver), rdtype=dns.rdatatype.A)
+        try:
             the_xfer = dns.zone.from_xfr(dns.query.xfr(str(nameserver_ip[0]), zonename))
             names = the_xfer.nodes.keys()
             for n in names:
-               if args.output:
-                   ts = datetime.now().strftime("%d%m%Y-%I%M%s")
-                   with open(args.domain+"-"+str(nameserver)+ts+".txt",'a+') as f:
+                if args.output:
+                    ts = datetime.now().strftime("%d%m%Y-%I%M%s")
+                    with open(args.domain+"-"+str(nameserver)+ts+".txt",'a+') as f:
                         f.write("DOMAIN: %s\n" % args.domain)
                         f.write(the_xfer[n].to_text(n))
-                   if args.verbose:
-                        print(the_xfer[n].to_text(n))
-
+                if args.verbose:
+                    print(the_xfer[n].to_text(n))
             print("Transfer from nameserver %s successful, check output log for details" % nameserver)
 
-    except dns.xfr.TransferError as e:
-         print("ERR: %s" %e)
+        except dns.xfr.TransferError as e:
+            print("ERR: %s" %e)
 
 if __name__ == "__main__":
     get_zone_xfer(args.domain)
+
