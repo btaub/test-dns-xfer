@@ -24,10 +24,8 @@ def get_nameservers(zonename):
     try:
         nameservers = dns.resolver.resolve(zonename, 'NS')
         return(nameservers)
-    except dns.resolver.NoNameservers as e:
-        print("ERR: %s" %e)
-    except dns.resolver.NXDOMAIN as e:
-        print("ERR: %s" %e)
+    except Exception as e:
+        print("%s" %(e))
         return
 
 def get_zone_xfer(zonename):
@@ -46,11 +44,10 @@ def get_zone_xfer(zonename):
                         f.write(the_xfer[n].to_text(n))
                 if args.verbose:
                     print(the_xfer[n].to_text(n))
-            print("Transfer from nameserver %s successful, check output log for details" % nameserver)
+            print("Transfer from nameserver %s successful, check output for details if -o was specified" % nameserver)
 
-        except dns.xfr.TransferError as e:
-            print("ERR: %s" %e)
+        except Exception as e:
+            print("%s" %(e))
 
 if __name__ == "__main__":
     get_zone_xfer(args.domain)
-
