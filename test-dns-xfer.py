@@ -47,7 +47,7 @@ def get_zone_xfer(zonename):
             print("Transfer from nameserver %s successful, check output for details if -o was specified" % nameserver)
 
         except Exception as e:
-            print("%s" %(e))
+            print("[x] %s: %s" %(nameserver, e))
 
 if __name__ == "__main__":
     get_zone_xfer(args.domain)
