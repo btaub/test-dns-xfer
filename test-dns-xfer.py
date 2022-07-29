@@ -13,9 +13,9 @@ import re
 import argparse
 from datetime import datetime
 
-parser = argparse.ArgumentParser(description="Test a domain for zone xfer" \
+parser = argparse.ArgumentParser(description="Test a domain for zone transfer" \
         ,formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("-d","--domain",help="The domain you want record(s) for",default="example.org")
+parser.add_argument("-d","--domain",help="The domain you want record(s) for",default="example.org",required=True)
 parser.add_argument("-o","--output",help="Create output file for transfer", action="store_true")
 parser.add_argument("-v","--verbose",action="store_true",help="Verbose output")
 args = parser.parse_args()
@@ -38,7 +38,7 @@ def get_zone_xfer(zonename):
             names = the_xfer.nodes.keys()
             for n in names:
                 if args.output:
-                    ts = datetime.now().strftime("%d%m%Y-%I%M%s")
+                    ts = datetime.now().strftime("%Y%d%m-%I%M")
                     with open(args.domain+"-"+str(nameserver)+ts+".txt",'a+') as f:
                         f.write("DOMAIN: %s\n" % args.domain)
                         f.write(the_xfer[n].to_text(n))
