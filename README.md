@@ -1,5 +1,5 @@
 # test-dns-xfer
-This script tests whether or not a domain allows [zone transfers](https://en.wikipedia.org/wiki/DNS_zone_transfer)
+Check if a domain allows [zone transfers](https://en.wikipedia.org/wiki/DNS_zone_transfer)
 
 ## Usage
 ```
