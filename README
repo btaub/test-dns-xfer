@@ -1,28 +1,55 @@
-#!/usr/bin/env python
-'''
+# test-dns-xfer
+This script tests whether or not a domain allows [zone transfers](https://en.wikipedia.org/wiki/DNS_zone_transfer)
 
-# Info: Query a supplied dns zone for it's NS records and 
-        test if it's offering transfers out to the world.
+## Sample usage
+```
+$ ./test-dns-xfer.py -h
+usage: test-dns-xfer.py [-h] -d DOMAIN [-o] [-v]
 
-# Required: dnspython, available here: http://www.dnspython.org/
-            or via pip - eg: sh-3.2$ sudo pip install dnspython
+Test a domain for zone transfer
 
-# Copyright (C) 2012
-# Author: Beau Taub <beautaub@gmail.com>
+optional arguments:
+  -h, --help            show this help message and exit
+  -d DOMAIN, --domain DOMAIN
+                        The domain you want record(s) for (default: example.org)
+  -o, --output          Create output file for transfer (default: False)
+  -v, --verbose         Verbose output (default: False)
+```
 
-# testDNSxfer is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2, or (at your option)
-# any later version.
+## Zone transfers disallowed/disabled:
+$ ./test-dns-xfer.py -d example.com
+[x] b.iana-servers.net.: Zone transfer error: REFUSED
+[x] a.iana-servers.net.: Zone transfer error: NOTAUTH
 
-# testDNSxfer is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+## Zone tranfers enabled
+$ ./test-dns-xfer.py -d churchofherpetology.org
+Transfer from nameserver ns1.access.net. successful, check output for details if -o was specified
+Transfer from nameserver ns2.access.net. successful, check output for details if -o was specified
 
-# You should have received a copy of the GNU General Public License
-# along with testDNSxfer; see the file COPYING.  If not, write to the
-# Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-# Boston, MA 02110-1301, USA. 
+## Zone transfer enabled, verbose output
+$ ./test-dns-xfer.py -v -d churchofherpetology.org
+[+] Testing nameserver: ns2.access.net.
+@ 86400 IN SOA ns2.access.net. hostmaster.access.net. 2022061000 3600 300 3600000 900
+@ 86400 IN NS ns1.access.net.
+@ 86400 IN NS ns2.access.net.
+@ 86400 IN MX 100 custmx.panix.com.
+@ 86400 IN A 166.84.8.241
+@ 86400 IN TXT "v=spf1 include:custspf.panix.com ?all"
+autoconfig 86400 IN CNAME autoconfig.panix.com.
+autodiscover 86400 IN CNAME autodiscover.panix.com.
+www 86400 IN A 166.84.8.241
+Transfer from nameserver ns2.access.net. successful, check output for details if -o was specified
+[+] Testing nameserver: ns1.access.net.
+@ 86400 IN SOA ns2.access.net. hostmaster.access.net. 2022061000 3600 300 3600000 900
+@ 86400 IN NS ns1.access.net.
+@ 86400 IN NS ns2.access.net.
+@ 86400 IN MX 100 custmx.panix.com.
+@ 86400 IN A 166.84.8.241
+@ 86400 IN TXT "v=spf1 include:custspf.panix.com ?all"
+autoconfig 86400 IN CNAME autoconfig.panix.com.
+autodiscover 86400 IN CNAME autodiscover.panix.com.
+www 86400 IN A 166.84.8.241
+Transfer from nameserver ns1.access.net. successful, check output for details if -o was specified
 
-'''
+--
+<sub>Copyleft 2022, all rights reversed.</sub>
