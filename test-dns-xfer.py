@@ -50,4 +50,8 @@ def get_zone_xfer(zonename):
             print("[x] %s: %s" %(nameserver, e))
 
 if __name__ == "__main__":
-    get_zone_xfer(args.domain)
+    try:
+        get_zone_xfer(args.domain)
+    except Exception as e:
+        if args.verbose:
+            print("%s" %(e))
