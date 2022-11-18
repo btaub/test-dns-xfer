@@ -2,7 +2,7 @@
 Check if a domain allows [zone transfers](https://en.wikipedia.org/wiki/DNS_zone_transfer)
 
 ## Usage
-```
+```console
 $ ./test-dns-xfer.py -h
 usage: test-dns-xfer.py [-h] -d DOMAIN [-o] [-v]
 
@@ -17,21 +17,21 @@ optional arguments:
 ```
 
 ## Zone transfers disallowed/disabled:
-```
+```console
 $ ./test-dns-xfer.py -d example.com
 [x] b.iana-servers.net.: Zone transfer error: REFUSED
 [x] a.iana-servers.net.: Zone transfer error: NOTAUTH
 ```
 
 ## Zone tranfers enabled
-```
+```console
 $ ./test-dns-xfer.py -d churchofherpetology.org
 Transfer from nameserver ns1.access.net. successful, check output for details if -o was specified
 Transfer from nameserver ns2.access.net. successful, check output for details if -o was specified
 ```
 
 ## Zone transfer enabled, verbose output
-```
+```console
 $ ./test-dns-xfer.py -v -d churchofherpetology.org
 [+] Testing nameserver: ns2.access.net.
 @ 86400 IN SOA ns2.access.net. hostmaster.access.net. 2022061000 3600 300 3600000 900
