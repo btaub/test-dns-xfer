@@ -31,7 +31,7 @@ def get_nameservers(zonename):
 def get_zone_xfer(zonename):
     for nameserver in get_nameservers(zonename):
         if args.verbose:
-            print("[+] Testing nameserver: %s" % (nameserver))
+            print("\n[+] Testing nameserver: %s\n" % (nameserver))
         nameserver_ip = dns.resolver.resolve(str(nameserver), rdtype=dns.rdatatype.A)
         try:
             the_xfer = dns.zone.from_xfr(dns.query.xfr(str(nameserver_ip[0]), zonename))
