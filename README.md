@@ -33,7 +33,9 @@ Transfer from nameserver ns2.access.net. successful, check output for details if
 ## Zone transfer enabled, verbose output
 ```console
 $ ./test-dns-xfer.py -v -d churchofherpetology.org
+
 [+] Testing nameserver: ns2.access.net.
+
 @ 86400 IN SOA ns2.access.net. hostmaster.access.net. 2022061000 3600 300 3600000 900
 @ 86400 IN NS ns1.access.net.
 @ 86400 IN NS ns2.access.net.
@@ -44,7 +46,9 @@ autoconfig 86400 IN CNAME autoconfig.panix.com.
 autodiscover 86400 IN CNAME autodiscover.panix.com.
 www 86400 IN A 166.84.8.241
 Transfer from nameserver ns2.access.net. successful, check output for details if -o was specified
+
 [+] Testing nameserver: ns1.access.net.
+
 @ 86400 IN SOA ns2.access.net. hostmaster.access.net. 2022061000 3600 300 3600000 900
 @ 86400 IN NS ns1.access.net.
 @ 86400 IN NS ns2.access.net.
